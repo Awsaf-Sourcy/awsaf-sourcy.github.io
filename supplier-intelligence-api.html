@@ -838,6 +838,36 @@
 
     <!-- 6. PLAYGROUND -->
     <h2 id="playground" class="section-anchor">6. API Playground</h2>
+
+    <!-- CORS + PROXY CONFIG CARD -->
+    <div class="card" id="proxy-config-card" style="border:2px solid var(--accent); margin-bottom:12px;">
+      <div style="display:flex; align-items:flex-start; gap:12px;">
+        <span style="font-size:1.5rem; flex-shrink:0; margin-top:2px;">&#127760;</span>
+        <div style="flex:1;">
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:0.5rem;">
+            <strong style="font-size:1.05rem;">CORS Proxy</strong>
+            <span class="tag" id="proxy-status-tag" style="font-size:0.65rem;">ON</span>
+          </div>
+          <p style="font-size:0.88rem; color:var(--ink-muted); margin-bottom:0.75rem;">
+            Browsers block cross-origin requests from hosted pages to <span class="ic">labs.sourcy.ai</span>.
+            The proxy routes requests through <span class="ic">corsproxy.io</span> to bypass this.
+            It is <strong>enabled by default</strong> so the Execute buttons work out of the box.
+          </p>
+          <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; padding:6px 14px; background:var(--cream-dark); border:1px solid var(--border);">
+              <input type="checkbox" id="cors-toggle" onchange="toggleProxy()" checked style="cursor:pointer; width:16px; height:16px;">
+              <span style="font-family:'JetBrains Mono',monospace; font-size:0.78rem; font-weight:600;">Enable CORS Proxy</span>
+            </label>
+            <span id="proxy-indicator" style="font-family:'JetBrains Mono',monospace; font-size:0.66rem; padding:3px 8px; background:var(--green-bg); color:var(--green); border:1px solid var(--green);">Requests routed via corsproxy.io</span>
+          </div>
+          <p style="font-size:0.78rem; color:var(--ink-muted); margin-top:0.5rem;">
+            <strong>Timeout:</strong> 3 minutes per request. <span class="ic">GRAPH_COMPLETION_CONTEXT_EXTENSION</span> queries can take 60&ndash;90s.
+            If you still get timeouts, use <strong>Copy as curl</strong> to run in your terminal (no timeout limits).
+          </p>
+        </div>
+      </div>
+    </div>
+
     <div class="playground">
       <div class="playground-head">
         <span class="ph-icon">&#9889;</span>
@@ -922,7 +952,7 @@
     <h2 id="structured" class="section-anchor">8. Structured Output Pattern</h2>
     <div class="card">
       <p style="margin-bottom:0.75rem;">No native structured mode. Embed a JSON schema directly in <code>question</code> and the LLM conforms its output.</p>
-      <h3 style="margin-top:0;">Template</h3>
+      <h3 style="margin-top:0;">Basic Template</h3>
       <div class="code-block"><pre>[Your question]. Output your response using this structure: {
   [your JSON schema with field descriptions]
 } [Optional: "Focus on being actionable", "Be concise"]</pre></div>
@@ -933,7 +963,95 @@
         <li>Include example values: <span class="ic">"confidence": "high/medium/low"</span></li>
         <li>Add a post-schema instruction for tone</li>
         <li>For complex schemas, break into multiple calls</li>
+        <li>Add explicit rules to prevent hallucination and handle edge cases</li>
+        <li>Include <code>partial_matches</code> and <code>no_results_reason</code> for graceful fallback</li>
       </ul>
+    </div>
+
+    <!-- ADVANCED PROMPT EXAMPLE -->
+    <h3>Advanced Example: Rigorous Prompt with Partial Matches &amp; Evidence</h3>
+    <div class="card" style="border-left:4px solid var(--accent);">
+      <p style="font-size:0.88rem; color:var(--ink-muted); margin-bottom:0.75rem;">This prompt uses explicit rules to prevent hallucination, surface partial matches, and require evidence. The schema separates qualified suppliers from partial matches and includes a <code>no_results_reason</code> fallback. GPT-improved prompt for maximum reliability.</p>
+      <div class="code-block"><pre>curl --location 'https://labs.sourcy.ai/api/supplier-intelligence/ask' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "question": "Find suppliers that can produce custom perfume bottle caps
+using zinc alloy AND electroplating finish.
+Return ONLY valid JSON matching this schema exactly
+(no markdown, no extra keys):
+{
+  \"qualified_suppliers\": [
+    {
+      \"supplier\": \"string\",
+      \"material_capability\": \"string\",
+      \"finish_options\": [\"string\"],
+      \"moq\": \"string\",
+      \"price_range\": \"string\",
+      \"reasoning\": \"string\",
+      \"evidence\": [\"string\"],
+      \"confidence\": \"high|medium|low\"
+    }
+  ],
+  \"partial_matches\": [
+    {
+      \"supplier\": \"string\",
+      \"matched\": [\"string\"],
+      \"missing\": [\"string\"],
+      \"reasoning\": \"string\",
+      \"evidence\": [\"string\"],
+      \"confidence\": \"high|medium|low\"
+    }
+  ],
+  \"no_results_reason\": \"string\"
+}
+
+Rules:
+- If no qualified suppliers found, set qualified_suppliers to [].
+- Always include partial_matches (use [] if none).
+- Always include no_results_reason.
+- A supplier is qualified ONLY if BOTH zinc alloy capability and
+  electroplating finish are explicitly supported in the data.
+- If a supplier meets one requirement but not the other (or it is
+  implied/unclear), put them in partial_matches and explain what
+  is missing.
+- evidence must contain short supporting snippets or facts
+  (no fabrication). If no evidence, set evidence to [].
+- Keep reasoning concise and tied to evidence.",
+    "query_type": "RAG_COMPLETION",
+    "node_type": "supplier_intelligence"
+}'</pre></div>
+      <div class="callout callout-tip" style="margin-top:0.75rem;">
+        <strong>Why this prompt is better:</strong>
+      </div>
+      <table class="tbl" style="margin-top:0;">
+        <thead><tr><th>Technique</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="ic">qualified_suppliers</span> vs <span class="ic">partial_matches</span></td>
+            <td>Separates exact matches from near-misses &mdash; surfaces useful leads even when no perfect match exists</td>
+          </tr>
+          <tr>
+            <td><span class="ic">evidence: [&quot;string&quot;]</span></td>
+            <td>Forces the LLM to cite supporting data from the knowledge base, preventing hallucination</td>
+          </tr>
+          <tr>
+            <td><span class="ic">confidence: &quot;high|medium|low&quot;</span></td>
+            <td>Makes uncertainty explicit &mdash; lets downstream consumers filter by confidence level</td>
+          </tr>
+          <tr>
+            <td><span class="ic">no_results_reason</span></td>
+            <td>Graceful fallback when the KB has no data &mdash; explains why rather than returning empty</td>
+          </tr>
+          <tr>
+            <td>&ldquo;Return ONLY valid JSON&rdquo; + &ldquo;no markdown, no extra keys&rdquo;</td>
+            <td>Prevents the LLM from wrapping response in markdown code blocks or adding commentary</td>
+          </tr>
+          <tr>
+            <td>Explicit qualification rule</td>
+            <td>&ldquo;ONLY if BOTH&hellip; are explicitly supported&rdquo; prevents over-matching on partial signals</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <!-- 9. SUPPLIER MATCHING -->
@@ -1051,24 +1169,76 @@ result = query_supplier_intelligence(
   </div>
 
   <script>
-    const API_URL = 'https://labs.sourcy.ai/api/supplier-intelligence/ask';
+    const API_URL_DIRECT = 'https://labs.sourcy.ai/api/supplier-intelligence/ask';
+    const CORS_PROXY = 'https://corsproxy.io/?url=';
+    const FETCH_TIMEOUT_MS = 180000; // 3 minutes
+    let useProxy = true; // ON by default
+
+    function toggleProxy() {
+      useProxy = document.getElementById('cors-toggle').checked;
+      const indicator = document.getElementById('proxy-indicator');
+      const statusTag = document.getElementById('proxy-status-tag');
+      if (useProxy) {
+        indicator.style.display = 'inline-block';
+        indicator.style.background = 'var(--green-bg)';
+        indicator.style.color = 'var(--green)';
+        indicator.style.borderColor = 'var(--green)';
+        indicator.textContent = 'Requests routed via corsproxy.io';
+        statusTag.textContent = 'ON';
+        statusTag.style.background = 'var(--green-bg)';
+        statusTag.style.color = 'var(--green)';
+        statusTag.style.borderColor = 'var(--green)';
+      } else {
+        indicator.style.display = 'inline-block';
+        indicator.style.background = 'var(--red-bg)';
+        indicator.style.color = 'var(--red)';
+        indicator.style.borderColor = 'var(--red)';
+        indicator.textContent = 'Direct requests \u2014 may fail on hosted pages (CORS)';
+        statusTag.textContent = 'OFF';
+        statusTag.style.background = 'var(--red-bg)';
+        statusTag.style.color = 'var(--red)';
+        statusTag.style.borderColor = 'var(--red)';
+      }
+    }
+
+    function getApiUrl() {
+      return useProxy ? CORS_PROXY + encodeURIComponent(API_URL_DIRECT) : API_URL_DIRECT;
+    }
 
     // ==================== API ENGINE ====================
     async function callAPI(question, queryType, nodeType) {
       const body = { question };
       if (queryType) body.query_type = queryType;
       if (nodeType) body.node_type = nodeType;
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
       const start = performance.now();
       try {
-        const res = await fetch(API_URL, {
+        const res = await fetch(getApiUrl(), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
+          body: JSON.stringify(body),
+          signal: controller.signal
         });
+        clearTimeout(timeoutId);
         const elapsed = Math.round(performance.now() - start);
         const text = await res.text();
         let parsed = null;
         try { parsed = JSON.parse(text); } catch(e) {}
+        // Check for proxy/gateway timeout in the response body
+        if (parsed && parsed.error && parsed.error.status === 504) {
+          return {
+            status: 504, statusText: 'Gateway Timeout',
+            time: elapsed, size: new Blob([text]).size,
+            body: JSON.stringify(parsed, null, 2) +
+              '\n\n--- Tip ---\n' +
+              'The CORS proxy timed out waiting for the API.\n' +
+              'GRAPH_COMPLETION_CONTEXT_EXTENSION queries can take 60-90s.\n\n' +
+              'Workaround: Copy the curl command and run it in your terminal\n' +
+              '(curl has no timeout by default and will wait for the full response).',
+            isJson: false
+          };
+        }
         return {
           status: res.status, statusText: res.statusText,
           time: elapsed, size: new Blob([text]).size,
@@ -1076,14 +1246,34 @@ result = query_supplier_intelligence(
           isJson: parsed !== null
         };
       } catch (err) {
+        clearTimeout(timeoutId);
+        const elapsed = Math.round(performance.now() - start);
+        const isAbort = err.name === 'AbortError';
+        const isCors = err.message.includes('Failed to fetch') || err.message.includes('NetworkError');
+        let hint;
+        if (isAbort) {
+          hint = '\n\nThe request timed out after 3 minutes.\n' +
+            'GRAPH_COMPLETION_CONTEXT_EXTENSION queries can take 60-90s and may exceed proxy limits.\n\n' +
+            'Workaround: Copy the curl command and run it in your terminal:\n' +
+            '  curl has no timeout and will wait for the full response.';
+        } else if (isCors && !useProxy) {
+          hint = '\n\nThis is likely a CORS error.\nEnable the "CORS Proxy" toggle above the playground and try again.\n\n' +
+            'Or copy the curl command and run it in your terminal.';
+        } else {
+          hint = '\n\nThe API may be temporarily unreachable.\nTry again in a few minutes or copy the curl command to run in terminal.';
+        }
         return {
-          status: 0, statusText: 'Network Error',
-          time: Math.round(performance.now() - start), size: 0,
-          body: `Error: ${err.message}\n\nIf you see a CORS error, serve this file via HTTP:\n  npx serve docs/\n  python3 -m http.server 8000 -d docs/\n\nOr copy the curl command and run in terminal.`,
+          status: isAbort ? 408 : 0,
+          statusText: isAbort ? 'Request Timeout' : 'Network Error',
+          time: elapsed, size: 0,
+          body: 'Error: ' + (isAbort ? 'Request timed out (3 min limit)' : err.message) + hint,
           isJson: false
         };
       }
     }
+
+    // Initialize proxy toggle state on page load
+    toggleProxy();
 
     function sClass(c) { return c === 0 ? 'serr' : c < 300 ? 's2xx' : c < 500 ? 's4xx' : 's5xx'; }
     function fmtBytes(b) { return b < 1024 ? b + ' B' : (b/1024).toFixed(1) + ' KB'; }
@@ -1102,7 +1292,7 @@ result = query_supplier_intelligence(
       const b = { question: q };
       if (qt) b.query_type = qt;
       if (nt) b.node_type = nt;
-      return `curl --location '${API_URL}' \\\n--header 'Content-Type: application/json' \\\n--data '${JSON.stringify(b, null, 4)}'`;
+      return `curl --location '${API_URL_DIRECT}' \\\n--header 'Content-Type: application/json' \\\n--data '${JSON.stringify(b, null, 4)}'`;
     }
 
     function showResult(prefix, result) {
@@ -1178,8 +1368,14 @@ result = query_supplier_intelligence(
           sampleMeta: '200 OK \u00B7 1m 23.34s \u00B7 1.89 KB \u00B7 Postman Verified'
         },
         {
-          title: 'Capability Qualification (Structured)',
-          desc: 'Qualify suppliers against specific material and finish requirements with structured output.',
+          title: 'Rigorous Qualification with Partial Matches & Evidence',
+          desc: 'GPT-improved prompt: explicit rules, partial match handling, evidence citations, confidence scoring, and no_results_reason fallback. The gold standard for structured output.',
+          question: 'Find suppliers that can produce custom perfume bottle caps using zinc alloy AND electroplating finish. Return ONLY valid JSON matching this schema exactly (no markdown, no extra keys): { "qualified_suppliers": [ { "supplier": "string", "material_capability": "string", "finish_options": ["string"], "moq": "string", "price_range": "string", "reasoning": "string", "evidence": ["string"], "confidence": "high|medium|low" } ], "partial_matches": [ { "supplier": "string", "matched": ["string"], "missing": ["string"], "reasoning": "string", "evidence": ["string"], "confidence": "high|medium|low" } ], "no_results_reason": "string" } Rules: - If no qualified suppliers found, set qualified_suppliers to []. - Always include partial_matches (use [] if none). - Always include no_results_reason. - A supplier is qualified ONLY if BOTH zinc alloy capability and electroplating finish are explicitly supported in the data. - If a supplier meets one requirement but not the other (or it is implied/unclear), put them in partial_matches and explain what is missing. - evidence must contain short supporting snippets or facts (no fabrication). If no evidence, set evidence to []. - Keep reasoning concise and tied to evidence.',
+          qt: 'RAG_COMPLETION', tags: ['fast','rec']
+        },
+        {
+          title: 'Capability Qualification (Simple)',
+          desc: 'Simpler version \u2014 qualify suppliers against material and finish requirements with basic structured output.',
           question: 'Which suppliers can do custom perfume bottle caps with zinc alloy material and electroplating finish? Output as JSON: {"qualified_suppliers": [{"supplier": "string", "material_capability": "string", "finish_options": ["string"], "moq": "string", "price_range": "string"}]}',
           qt: 'RAG_COMPLETION', tags: ['fast']
         },
