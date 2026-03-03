@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supplier Intelligence API &mdash; Interactive Documentation</title>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1A1A2E;
+      --ink-light: #3D3D5C;
+      --ink-muted: #6B6B8D;
+      --cream: #FAF8F3;
+      --cream-dark: #EDEAE2;
+      --parchment: #FFFEF9;
+      --accent: #8B4513;
+      --accent-light: #A0522D;
+      --border: #D4CFC4;
+      --border-light: #E8E4DB;
+      --b1-bg: #FDF8ED; --b1-fg: #78350F;
+      --b2-bg: #EEF2F7; --b2-fg: #1E3A5F;
+      --b3-bg: #EFF5EB; --b3-fg: #2D5016;
+      --b4-bg: #FBF0F0; --b4-fg: #7C1D1D;
+      --b5-bg: #F5EEFF; --b5-fg: #5B21B6;
+      --b6-bg: #EDEAE2; --b6-fg: #6B6B8D;
+      --green: #2D5016; --green-bg: #EFF5EB;
+      --red: #7C1D1D; --red-bg: #FBF0F0;
+      --blue: #1E3A5F; --blue-bg: #EEF2F7;
+      --orange: #78350F; --orange-bg: #FDF8ED;
+      --purple: #5B21B6; --purple-bg: #F5EEFF;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'EB Garamond', Georgia, serif;
+      background: var(--cream);
+      color: var(--ink);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: var(--ink);
+      color: var(--cream);
+      padding: 48px 20px 40px;
+      border-bottom: 3px double var(--accent);
+    }
+    .hero-inner { max-width: 1080px; margin: 0 auto; }
+    .hero h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.25rem;
+    }
+    .hero .subtitle {
+      color: var(--ink-muted);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .hero-stats {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat .val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--cream);
+      display: block;
+    }
+    .hero-stat .lbl {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-muted);
+    }
+
+    /* ===== CONTAINER ===== */
+    .container { max-width: 1080px; margin: 0 auto; padding: 24px 20px; }
+
+    /* ===== TYPOGRAPHY ===== */
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin: 2.5rem 0 0.75rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--ink);
+    }
+    h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.5rem;
+      color: var(--ink-light);
+    }
+    p { font-size: 0.95rem; }
+    code, .mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+    }
+
+    /* ===== CARDS ===== */
+    .card {
+      background: var(--parchment);
+      border: 1px solid var(--border);
+      padding: 16px;
+      margin-bottom: 12px;
+      transition: transform 0.12s, box-shadow 0.12s;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(26,26,46,0.08);
+    }
+
+    /* ===== INLINE CODE ===== */
+    .ic {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      background: var(--cream-dark);
+      padding: 2px 6px;
+      border: 1px solid var(--border-light);
+    }
+
+    /* ===== TAGS ===== */
+    .tag {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      padding: 2px 6px;
+      border: 1px solid;
+    }
+    .tag-fast { color: var(--green); border-color: var(--green); background: var(--green-bg); }
+    .tag-slow { color: var(--orange); border-color: var(--orange); background: var(--orange-bg); }
+    .tag-rec { color: var(--accent); border-color: var(--accent); background: #FDF5ED; }
+    .tag-alt { color: var(--blue); border-color: var(--blue); background: var(--blue-bg); }
+    .tag-rich { color: var(--green); border-color: var(--green); background: var(--green-bg); }
+    .tag-sparse { color: var(--ink-muted); border-color: var(--ink-muted); background: var(--b6-bg); }
+    .tag-err { color: var(--red); border-color: var(--red); background: var(--red-bg); }
+    .tag-ok { color: var(--green); border-color: var(--green); background: var(--green-bg); }
+
+    /* ===== TABLES ===== */
+    .tbl { width: 100%; border-collapse: collapse; margin: 0.75rem 0; font-size: 0.9rem; }
+    .tbl th, .tbl td {
+      text-align: left;
+      padding: 0.6rem 0.75rem;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .tbl th {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-muted);
+      background: var(--cream-dark);
+    }
+
+    /* ===== TOC ===== */
+    .toc { list-style: none; padding: 0; }
+    .toc li { padding: 0.3rem 0; }
+    .toc a { color: var(--accent); text-decoration: none; font-size: 0.95rem; }
+    .toc a:hover { text-decoration: underline; }
+
+    /* ===== GRID ===== */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    /* ===== CALLOUTS ===== */
+    .callout {
+      border-left: 4px solid;
+      padding: 12px 16px;
+      margin: 0.75rem 0;
+      font-size: 0.9rem;
+    }
+    .callout-tip { border-color: var(--accent); background: #FDF5ED; }
+    .callout-warn { border-color: var(--orange); background: var(--orange-bg); }
+    .callout-info { border-color: var(--blue); background: var(--blue-bg); }
+    .callout strong { color: var(--accent); }
+    .callout-warn strong { color: var(--orange); }
+    .callout-info strong { color: var(--blue); }
+
+    /* ===== VALIDATION ===== */
+    .test-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border-light);
+      font-size: 0.9rem;
+    }
+    .test-row:last-child { border-bottom: none; }
+    .test-icon { font-size: 1rem; flex-shrink: 0; }
+
+    /* ===== FLOW STEPS ===== */
+    .flow-step {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.6rem 0;
+    }
+    .flow-num {
+      width: 26px; height: 26px;
+      background: var(--ink);
+      color: var(--cream);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem; font-weight: 600; flex-shrink: 0;
+    }
+
+    /* ===== CODE BLOCKS ===== */
+    .code-block {
+      background: var(--ink);
+      border: 1px solid var(--ink-light);
+      padding: 14px 16px;
+      margin: 0.5rem 0;
+      overflow-x: auto;
+    }
+    .code-block pre {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: var(--cream);
+    }
+
+    /* ========== SWAGGER-STYLE INTERACTIVE PANEL ========== */
+    .api-card {
+      background: var(--parchment);
+      border: 1px solid var(--border);
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    .api-card-head {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 10px 16px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.12s;
+    }
+    .api-card-head:hover { background: var(--cream-dark); }
+    .api-card-head .method-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 3px 8px;
+      background: var(--green);
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .api-card-head .title { font-weight: 600; font-size: 0.95rem; flex: 1; }
+    .api-card-head .tags { display: flex; gap: 4px; flex-shrink: 0; }
+    .api-card-head .chev {
+      color: var(--ink-muted);
+      transition: transform 0.15s;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+    .api-card.open .api-card-head .chev { transform: rotate(180deg); }
+    .api-card-body {
+      display: none;
+      border-top: 1px solid var(--border-light);
+    }
+    .api-card.open .api-card-body { display: block; }
+    .api-card-desc {
+      padding: 10px 16px;
+      font-size: 0.88rem;
+      color: var(--ink-muted);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    /* ===== SCENARIO HEADER ===== */
+    .scenario-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-left: 4px solid;
+      margin-bottom: 4px;
+    }
+    .scenario-header.s1 { border-color: var(--b1-fg); background: var(--b1-bg); }
+    .scenario-header.s2 { border-color: var(--b5-fg); background: var(--b5-bg); }
+    .scenario-header.s3 { border-color: var(--b6-fg); background: var(--b6-bg); }
+    .scenario-icon { font-size: 1.2rem; }
+    .scenario-title { font-weight: 700; font-size: 1rem; }
+    .scenario-sub { font-size: 0.82rem; color: var(--ink-muted); }
+
+    /* ===== PARAM FORM ===== */
+    .api-params { padding: 14px 16px; }
+    .api-params-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-muted);
+      margin-bottom: 0.6rem;
+      font-weight: 600;
+    }
+    .p-row {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 0.6rem;
+      align-items: start;
+      margin-bottom: 0.6rem;
+    }
+    .p-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding-top: 0.5rem;
+    }
+    .p-label .p-type {
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--ink-muted);
+      font-weight: 400;
+    }
+    .p-label .p-req {
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      color: var(--red);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .p-input textarea {
+      width: 100%;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      color: var(--ink);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      padding: 8px 10px;
+      resize: vertical;
+      min-height: 72px;
+      line-height: 1.5;
+      transition: border-color 0.12s;
+    }
+    .p-input textarea:focus { outline: none; border-color: var(--accent); }
+    .p-input select {
+      width: 100%;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      color: var(--ink);
+      font-family: 'EB Garamond', serif;
+      font-size: 0.88rem;
+      padding: 7px 10px;
+      cursor: pointer;
+      transition: border-color 0.12s;
+    }
+    .p-input select:focus { outline: none; border-color: var(--accent); }
+
+    /* ===== ACTION BAR ===== */
+    .api-actions {
+      padding: 8px 16px;
+      border-top: 1px solid var(--border-light);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .btn-exec {
+      background: var(--ink);
+      color: var(--cream);
+      border: none;
+      padding: 7px 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.12s, transform 0.08s;
+    }
+    .btn-exec:hover { background: var(--ink-light); }
+    .btn-exec:active { transform: scale(0.97); }
+    .btn-exec:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn-exec .spinner {
+      display: none;
+      width: 12px; height: 12px;
+      border: 2px solid rgba(250,248,243,0.3);
+      border-top-color: var(--cream);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+    .btn-exec.loading .spinner { display: inline-block; }
+    .btn-exec.loading .btn-text { display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .btn-curl {
+      background: var(--cream);
+      color: var(--ink-muted);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.66rem;
+      cursor: pointer;
+      transition: all 0.12s;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .btn-curl:hover { color: var(--ink); border-color: var(--accent); }
+
+    .btn-clear {
+      background: transparent;
+      color: var(--ink-muted);
+      border: 1px solid var(--border-light);
+      padding: 6px 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.66rem;
+      cursor: pointer;
+      margin-left: auto;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: all 0.12s;
+    }
+    .btn-clear:hover { color: var(--red); border-color: var(--red); }
+
+    /* ===== RESPONSE PANEL ===== */
+    .api-response {
+      border-top: 1px solid var(--border);
+      display: none;
+    }
+    .api-response.visible { display: block; }
+    .resp-header {
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--cream-dark);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+    }
+    .resp-status {
+      font-weight: 600;
+      padding: 2px 8px;
+    }
+    .resp-status.s2xx { background: var(--green-bg); color: var(--green); }
+    .resp-status.s4xx { background: var(--orange-bg); color: var(--orange); }
+    .resp-status.s5xx { background: var(--red-bg); color: var(--red); }
+    .resp-status.serr { background: var(--red-bg); color: var(--red); }
+    .resp-meta { color: var(--ink-muted); }
+    .resp-body {
+      padding: 14px 16px;
+      max-height: 500px;
+      overflow: auto;
+      background: var(--ink);
+    }
+    .resp-body pre {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: var(--cream);
+    }
+    /* JSON syntax */
+    .j-key { color: #a29bfe; }
+    .j-str { color: #81ecec; }
+    .j-num { color: #fdcb6e; }
+    .j-bool { color: #74b9ff; }
+    .j-null { color: #636e72; }
+
+    /* ===== PLAYGROUND ===== */
+    .playground {
+      background: var(--parchment);
+      border: 2px solid var(--accent);
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .playground-head {
+      background: var(--ink);
+      color: var(--cream);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 3px double var(--accent);
+    }
+    .playground-head .ph-icon { font-size: 1.2rem; }
+    .playground-head .ph-title {
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: 0.02em;
+    }
+    .playground-head .ph-sub {
+      color: var(--ink-muted);
+      font-size: 0.82rem;
+      margin-left: auto;
+    }
+
+    /* ===== SAMPLE RESPONSE ===== */
+    .sample-resp {
+      background: var(--cream-dark);
+      border: 1px solid var(--border);
+      padding: 12px 16px;
+      margin: 0.5rem 0;
+    }
+    .sample-resp-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-muted);
+      margin-bottom: 0.4rem;
+    }
+    .sample-resp pre {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      color: var(--ink);
+    }
+
+    /* ===== SECTION ANCHOR ===== */
+    .section-anchor { scroll-margin-top: 2rem; }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      text-align: center;
+      padding: 2rem 0;
+      color: var(--ink-muted);
+      font-size: 0.82rem;
+      border-top: 1px solid var(--border-light);
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-inner">
+      <h1>Supplier Intelligence API</h1>
+      <p class="subtitle">Interactive Documentation & Validation Report</p>
+      <div class="hero-stats">
+        <div class="hero-stat"><span class="val">POST</span><span class="lbl">Method</span></div>
+        <div class="hero-stat"><span class="val">/ask</span><span class="lbl">Endpoint</span></div>
+        <div class="hero-stat"><span class="val">4</span><span class="lbl">Query Types</span></div>
+        <div class="hero-stat"><span class="val">3</span><span class="lbl">Scenarios</span></div>
+        <div class="hero-stat"><span class="val">8</span><span class="lbl">Use Cases</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- TOC -->
+    <div class="card">
+      <h3 style="margin-top:0; margin-bottom:0.5rem;">Contents</h3>
+      <ul class="toc">
+        <li><a href="#overview">1. Overview</a></li>
+        <li><a href="#endpoint">2. Endpoint & Parameters</a></li>
+        <li><a href="#query-types">3. Query Types</a></li>
+        <li><a href="#data">4. Data Availability</a></li>
+        <li><a href="#validation">5. Validation Results</a></li>
+        <li><a href="#playground">6. API Playground</a></li>
+        <li><a href="#scenarios">7. Scenarios & Use Cases (Try it out)</a></li>
+        <li><a href="#structured">8. Structured Output Pattern</a></li>
+        <li><a href="#matching">9. Supplier Matching from Requirements</a></li>
+        <li><a href="#code">10. Integration Code</a></li>
+        <li><a href="#strategy">11. Query Strategy Guide</a></li>
+      </ul>
+    </div>
+
+    <!-- 1. OVERVIEW -->
+    <h2 id="overview" class="section-anchor">1. Overview</h2>
+    <div class="card">
+      <p>The Supplier Intelligence API provides a <strong>natural-language Q&A interface</strong> over Sourcy's supplier knowledge base. It retrieves and synthesizes information from multiple sources:</p>
+      <div class="grid-2" style="margin-top:0.75rem;">
+        <div class="card" style="margin:0; border-left:4px solid var(--green);">
+          <strong>WeChat Chat Logs</strong>
+          <p style="font-size:0.85rem; color:var(--ink-muted);">Real sourcing conversations &mdash; pricing, MOQ, customization details</p>
+        </div>
+        <div class="card" style="margin:0; border-left:4px solid var(--blue);">
+          <strong>TMAPI Product Tags</strong>
+          <p style="font-size:0.85rem; color:var(--ink-muted);">Product catalog metadata &mdash; categories, tags, supplier mappings</p>
+        </div>
+        <div class="card" style="margin:0; border-left:4px solid var(--orange);">
+          <strong>Supplier Table</strong>
+          <p style="font-size:0.85rem; color:var(--ink-muted);">Internal supplier database &mdash; company info, certifications</p>
+        </div>
+        <div class="card" style="margin:0; border-left:4px solid var(--purple);">
+          <strong>Growth Team Data</strong>
+          <p style="font-size:0.85rem; color:var(--ink-muted);">Collated chats and text dumps from growth team interactions</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. ENDPOINT -->
+    <h2 id="endpoint" class="section-anchor">2. Endpoint & Parameters</h2>
+    <div class="card">
+      <div style="display:flex; gap:8px; align-items:center; margin-bottom:1rem;">
+        <span class="tag tag-rec" style="font-size:0.72rem;">POST</span>
+        <code style="font-size:0.88rem;">https://labs.sourcy.ai/api/supplier-intelligence/ask</code>
+      </div>
+      <table class="tbl">
+        <thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Default</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="ic">question</span></td><td>string</td>
+            <td><strong style="color:var(--red);">Yes</strong></td><td>&mdash;</td>
+            <td>Natural language question. Supports free-form, structured output, and multi-requirement matching.</td>
+          </tr>
+          <tr>
+            <td><span class="ic">query_type</span></td><td>string</td><td>No</td>
+            <td><span class="ic">RAG_COMPLETION</span></td>
+            <td>Retrieval strategy. See Query Types below.</td>
+          </tr>
+          <tr>
+            <td><span class="ic">node_type</span></td><td>string</td><td>No</td>
+            <td><span class="ic">supplier_intelligence</span></td>
+            <td>Knowledge base segment. Keep as <code>supplier_intelligence</code>.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout callout-info" style="margin-top:0.75rem;">
+        <strong>Response format:</strong> <span class="ic">{"answer": ["..."]}</span> &mdash; The API returns a JSON object with an <code>answer</code> array containing one or more strings.
+      </div>
+    </div>
+
+    <!-- 3. QUERY TYPES -->
+    <h2 id="query-types" class="section-anchor">3. Query Types</h2>
+    <div class="grid-2">
+      <div class="card" style="border-left:4px solid var(--green);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+          <strong>RAG_COMPLETION</strong>
+          <div><span class="tag tag-fast">Fast</span> <span class="tag tag-rec">Recommended</span></div>
+        </div>
+        <p style="font-size:0.88rem; color:var(--ink-muted);">Standard RAG retrieval + LLM completion. Best for most use cases.</p>
+      </div>
+      <div class="card" style="border-left:4px solid var(--purple);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+          <strong>GRAPH_COMPLETION_CONTEXT_EXTENSION</strong>
+          <div><span class="tag tag-slow">Slow</span> <span class="tag tag-rec">Recommended</span></div>
+        </div>
+        <p style="font-size:0.88rem; color:var(--ink-muted);">Knowledge graph traversal + extended context. Most comprehensive results.</p>
+      </div>
+      <div class="card" style="border-left:4px solid var(--blue);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+          <strong>GRAPH_COMPLETION</strong>
+          <div><span class="tag tag-fast">Fast</span> <span class="tag tag-alt">Alternative</span></div>
+        </div>
+        <p style="font-size:0.88rem; color:var(--ink-muted);">Graph-based retrieval without context extension.</p>
+      </div>
+      <div class="card" style="border-left:4px solid var(--orange);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+          <strong>GRAPH_COMPLETION_COT</strong>
+          <div><span class="tag tag-slow">Slow</span> <span class="tag tag-alt">Alternative</span></div>
+        </div>
+        <p style="font-size:0.88rem; color:var(--ink-muted);">Graph retrieval with chain-of-thought reasoning.</p>
+      </div>
+    </div>
+
+    <!-- 4. DATA -->
+    <h2 id="data" class="section-anchor">4. Data Availability</h2>
+    <div class="callout callout-warn">
+      <strong>Limited ingestion:</strong> As of March 2026, data is actively being ingested. Expect sparse responses for many categories.
+    </div>
+    <div class="card">
+      <table class="tbl">
+        <thead><tr><th>Topic</th><th>Source</th><th>Richness</th></tr></thead>
+        <tbody>
+          <tr><td>Customized umbrellas</td><td>WeChat chats</td><td><span class="tag tag-rich">Rich</span></td></tr>
+          <tr><td>Customized perfume bottle caps</td><td>WeChat chats</td><td><span class="tag tag-rich">Rich</span></td></tr>
+          <tr><td>Trash cans</td><td>TMAPI product tags</td><td><span class="tag tag-sparse">Tags only</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 5. VALIDATION -->
+    <h2 id="validation" class="section-anchor">5. Validation Results</h2>
+    <p style="font-size:0.88rem; color:var(--ink-muted); margin-bottom:0.75rem;">All 3 scenarios validated via Postman on <strong>2026-03-03</strong>. API confirmed operational with <span class="tag tag-ok">200 OK</span> responses across all test cases.</p>
+
+    <!-- Scenario 1 Validation -->
+    <div class="card" style="border-left:4px solid var(--b1-fg);">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:0.75rem;">
+        <span style="font-size:1.1rem;">&#128269;</span>
+        <strong>Scenario 1: Generic Question</strong>
+        <span class="tag tag-ok" style="margin-left:auto;">200 OK</span>
+      </div>
+      <div class="test-row" style="border:none; padding:0;">
+        <span class="test-icon" style="color:var(--green);">&#10003;</span>
+        <span><span class="ic">RAG_COMPLETION</span> &mdash; 3.42s &mdash; 242 B</span>
+      </div>
+      <div class="sample-resp" style="margin-top:0.5rem;">
+        <div class="sample-resp-label">Request</div>
+<pre>{
+  "question": "which suppliers can source trash can? I need supplier id and supplier name",
+  "query_type": "RAG_COMPLETION",
+  "node_type": "supplier_intelligence"
+}</pre>
+      </div>
+      <div class="sample-resp" style="margin-top:0.25rem; background:var(--green-bg); border-color:var(--green);">
+        <div class="sample-resp-label" style="color:var(--green);">Response (Verified)</div>
+<pre>{
+  "answer": [
+    "Supplier ID: 252498, Supplier Name: Taizhou Leshi Home Products Co., Ltd."
+  ]
+}</pre>
+      </div>
+      <div class="callout callout-info" style="margin-top:0.5rem; font-size:0.85rem;">
+        <strong>Observation:</strong> The API returns a flat string with supplier ID and name. For generic questions without a structured output schema, the response is a natural-language string inside the <code>answer</code> array.
+      </div>
+    </div>
+
+    <!-- Scenario 2 Validation -->
+    <div class="card" style="border-left:4px solid var(--b5-fg);">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:0.75rem;">
+        <span style="font-size:1.1rem;">&#128203;</span>
+        <strong>Scenario 2: Structured Output</strong>
+        <span class="tag tag-ok" style="margin-left:auto;">200 OK</span>
+      </div>
+      <div class="test-row" style="border:none; padding:0;">
+        <span class="test-icon" style="color:var(--green);">&#10003;</span>
+        <span><span class="ic">GRAPH_COMPLETION_CONTEXT_EXTENSION</span> &mdash; 1m 23.34s &mdash; 1.89 KB</span>
+      </div>
+      <div class="sample-resp" style="margin-top:0.5rem;">
+        <div class="sample-resp-label">Request</div>
+<pre>{
+  "question": "What are available customization options for umbrella? Output your response using this structure:
+      {'customization_options': [{'option': 'string', 'pros': ['string'], 'cons': ['string'],
+      'price_impact': 'string', 'moq_impact': 'string', 'lead_time_impact': 'string'}]}
+      Focus on being actionable and transparent about trade-offs.",
+  "query_type": "GRAPH_COMPLETION_CONTEXT_EXTENSION",
+  "node_type": "supplier_intelligence"
+}</pre>
+      </div>
+      <div class="sample-resp" style="margin-top:0.25rem; background:var(--purple-bg); border-color:var(--purple);">
+        <div class="sample-resp-label" style="color:var(--purple);">Response (Verified) &mdash; Parsed from answer[0]</div>
+<pre>{
+  "customization_options": [
+    {
+      "option": "Logo Silk Screen Printing",
+      "pros": [
+        "Lower unit cost compared to digital printing",
+        "No color shifts during production"
+      ],
+      "cons": [
+        "Limited to stock fabric colors for the base material",
+        "Difficult to achieve exact Pantone matches if fabric is not in stock"
+      ],
+      "price_impact": "Baseline price (13.5 - 16.2 RMB)",
+      "moq_impact": "None explicitly mentioned.",
+      "lead_time_impact": "Standard lead time (7 days)"
+    },
+    {
+      "option": "Logo Digital Printing",
+      "pros": [
+        "Allows for exact Pantone color matching (e.g., Reflex Blue C)",
+        "No reliance on factory fabric stock colors"
+      ],
+      "cons": [
+        "Higher unit price",
+        "Potential for slight color shifts compared to silk-screen on pre-dyed fabric"
+      ],
+      "price_impact": "+2.3 CNY for 21-inch models; +1.6 CNY for 23-inch models",
+      "moq_impact": "None explicitly mentioned.",
+      "lead_time_impact": "Standard lead time (7 days)"
+    },
+    {
+      "option": "Fabric Black Glue Coating (UV/Opacity)",
+      "pros": ["Enhanced sun protection", "Increased opacity"],
+      "cons": ["Additional cost per unit"],
+      "price_impact": "+0.5 CNY per unit",
+      "moq_impact": "None explicitly mentioned.",
+      "lead_time_impact": "Not explicitly mentioned, assumed standard lead time."
+    },
+    {
+      "option": "Structural Component Selection (Rod &amp; Handle)",
+      "pros": [
+        "4-fold rod is thickened and more durable than 3-fold",
+        "Xiaomi-style handle provides a premium aesthetic"
+      ],
+      "cons": [
+        "Higher weight (approx 1-3kg difference per carton of 50)"
+      ],
+      "price_impact": "+2.7 CNY for upgrade from 21-inch (306 handle) to 23-inch (Xiaomi handle)",
+      "moq_impact": "None explicitly mentioned.",
+      "lead_time_impact": "Not explicitly mentioned, assumed standard lead time."
+    }
+  ]
+}</pre>
+      </div>
+      <div class="callout callout-info" style="margin-top:0.5rem; font-size:0.85rem;">
+        <strong>Observation:</strong> The <code>answer[0]</code> string contains a JSON-stringified object matching the requested schema. The LLM successfully produced 4 customization options with real pricing data from WeChat supplier conversations (e.g., 13.5&ndash;16.2 RMB baseline, +2.3 CNY for digital printing). Note: <code>GRAPH_COMPLETION_CONTEXT_EXTENSION</code> took <strong>83 seconds</strong> &mdash; significantly slower but much more comprehensive than RAG_COMPLETION.
+      </div>
+    </div>
+
+    <!-- Scenario 3 Validation -->
+    <div class="card" style="border-left:4px solid var(--b6-fg);">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:0.75rem;">
+        <span style="font-size:1.1rem;">&#128683;</span>
+        <strong>Scenario 3: No Relevant Knowledge</strong>
+        <span class="tag tag-ok" style="margin-left:auto;">200 OK</span>
+      </div>
+      <div class="test-row" style="border:none; padding:0;">
+        <span class="test-icon" style="color:var(--green);">&#10003;</span>
+        <span><span class="ic">GRAPH_COMPLETION_CONTEXT_EXTENSION</span> &mdash; 1m 8.10s &mdash; 268 B</span>
+      </div>
+      <div class="sample-resp" style="margin-top:0.5rem;">
+        <div class="sample-resp-label">Request</div>
+<pre>{
+  "question": "What are available customization options for car tire? Output your response using this structure:
+      {'customization_options': [{'option': 'string', 'pros': ['string'], 'cons': ['string'],
+      'price_impact': 'string', 'moq_impact': 'string', 'lead_time_impact': 'string'}]}
+      Focus on being actionable and transparent about trade-offs.",
+  "query_type": "GRAPH_COMPLETION_CONTEXT_EXTENSION",
+  "node_type": "supplier_intelligence"
+}</pre>
+      </div>
+      <div class="sample-resp" style="margin-top:0.25rem; background:var(--b6-bg); border-color:var(--b6-fg);">
+        <div class="sample-resp-label" style="color:var(--b6-fg);">Response (Verified)</div>
+<pre>{
+  "answer": [
+    "No information regarding customization options for car tires is available in the provided context."
+  ]
+}</pre>
+      </div>
+      <div class="callout callout-info" style="margin-top:0.5rem; font-size:0.85rem;">
+        <strong>Observation:</strong> When the knowledge base has no relevant data, the API returns a <strong>200 OK</strong> (not a 404 or error) with a clear natural-language message explaining that no information is available. The API does <em>not</em> hallucinate or fabricate supplier data &mdash; it transparently admits the gap. This is the expected behavior for products outside the current data ingestion scope.
+      </div>
+    </div>
+
+    <div class="callout callout-warn" style="margin-top:0.75rem;">
+      <strong>Note:</strong> The API may be intermittently unreachable (HTTP 500) on the labs environment. If you encounter errors, retry after a few minutes or check with the platform team.
+    </div>
+
+    <!-- 6. PLAYGROUND -->
+    <h2 id="playground" class="section-anchor">6. API Playground</h2>
+    <div class="playground">
+      <div class="playground-head">
+        <span class="ph-icon">&#9889;</span>
+        <span class="ph-title">Interactive Playground</span>
+        <span class="ph-sub">Edit parameters & execute</span>
+      </div>
+      <div class="api-params">
+        <div class="api-params-title">Request Body</div>
+        <div class="p-row">
+          <div class="p-label">question <span class="p-type">string</span><span class="p-req">required</span></div>
+          <div class="p-input"><textarea id="pg-q" rows="4" placeholder="Type your question here...">which suppliers can source trash can? I need supplier id and supplier name</textarea></div>
+        </div>
+        <div class="p-row">
+          <div class="p-label">query_type <span class="p-type">string</span></div>
+          <div class="p-input">
+            <select id="pg-qt">
+              <option value="RAG_COMPLETION" selected>RAG_COMPLETION (fast, recommended)</option>
+              <option value="GRAPH_COMPLETION_CONTEXT_EXTENSION">GRAPH_COMPLETION_CONTEXT_EXTENSION (slow, comprehensive)</option>
+              <option value="GRAPH_COMPLETION">GRAPH_COMPLETION (fast, alternative)</option>
+              <option value="GRAPH_COMPLETION_COT">GRAPH_COMPLETION_COT (slow, chain-of-thought)</option>
+            </select>
+          </div>
+        </div>
+        <div class="p-row">
+          <div class="p-label">node_type <span class="p-type">string</span></div>
+          <div class="p-input">
+            <select id="pg-nt"><option value="supplier_intelligence" selected>supplier_intelligence</option></select>
+          </div>
+        </div>
+      </div>
+      <div class="api-actions">
+        <button class="btn-exec" id="pg-btn" onclick="execPlayground()">
+          <span class="spinner"></span><span class="btn-text">Execute</span>
+        </button>
+        <button class="btn-curl" onclick="copyCurl('pg')">Copy as curl</button>
+        <button class="btn-clear" onclick="clearResp('pg')">Clear</button>
+      </div>
+      <div class="api-response" id="pg-resp">
+        <div class="resp-header">
+          <span class="resp-status" id="pg-status"></span>
+          <span class="resp-meta" id="pg-meta"></span>
+        </div>
+        <div class="resp-body"><pre id="pg-body"></pre></div>
+      </div>
+    </div>
+
+    <!-- 7. SCENARIOS & USE CASES -->
+    <h2 id="scenarios" class="section-anchor">7. Scenarios & Use Cases</h2>
+    <p style="color:var(--ink-muted); margin-bottom:0.75rem; font-size:0.9rem;">Click any card to expand, edit parameters, and hit <strong>Execute</strong> to call the API live.</p>
+
+    <!-- SCENARIO 1 -->
+    <div class="scenario-header s1">
+      <span class="scenario-icon">&#128269;</span>
+      <div>
+        <div class="scenario-title">Scenario 1: Generic Questions</div>
+        <div class="scenario-sub">Free-form questions &mdash; whatever you want to ask about suppliers, products, or capabilities</div>
+      </div>
+    </div>
+    <div id="sc1-container"></div>
+
+    <!-- SCENARIO 2 -->
+    <div class="scenario-header s2" style="margin-top:1.25rem;">
+      <span class="scenario-icon">&#128203;</span>
+      <div>
+        <div class="scenario-title">Scenario 2: Structured Output</div>
+        <div class="scenario-sub">Embed a JSON schema in the question to get structured, parseable responses</div>
+      </div>
+    </div>
+    <div id="sc2-container"></div>
+
+    <!-- SCENARIO 3 -->
+    <div class="scenario-header s3" style="margin-top:1.25rem;">
+      <span class="scenario-icon">&#128683;</span>
+      <div>
+        <div class="scenario-title">Scenario 3: No Relevant Knowledge</div>
+        <div class="scenario-sub">Ask about products/topics where the knowledge base has no data &mdash; observe fallback behavior</div>
+      </div>
+    </div>
+    <div id="sc3-container"></div>
+
+    <!-- 8. STRUCTURED OUTPUT -->
+    <h2 id="structured" class="section-anchor">8. Structured Output Pattern</h2>
+    <div class="card">
+      <p style="margin-bottom:0.75rem;">No native structured mode. Embed a JSON schema directly in <code>question</code> and the LLM conforms its output.</p>
+      <h3 style="margin-top:0;">Template</h3>
+      <div class="code-block"><pre>[Your question]. Output your response using this structure: {
+  [your JSON schema with field descriptions]
+} [Optional: "Focus on being actionable", "Be concise"]</pre></div>
+      <h3>Tips</h3>
+      <ul style="padding-left:1.25rem; font-size:0.88rem; color:var(--ink-muted);">
+        <li>Keep schemas flat and simple</li>
+        <li>Use descriptive field names</li>
+        <li>Include example values: <span class="ic">"confidence": "high/medium/low"</span></li>
+        <li>Add a post-schema instruction for tone</li>
+        <li>For complex schemas, break into multiple calls</li>
+      </ul>
+    </div>
+
+    <!-- 9. SUPPLIER MATCHING -->
+    <h2 id="matching" class="section-anchor">9. Supplier Matching from Requirements</h2>
+    <div class="card">
+      <p style="margin-bottom:0.75rem;">Core use case: <strong>submit requirements, get ranked supplier matches</strong> with gap analysis.</p>
+      <div class="flow-step"><div class="flow-num">1</div><span>Define sourcing requirements (product, material, MOQ, budget, certs)</span></div>
+      <div class="flow-step"><div class="flow-num">2</div><span>Embed requirements + output schema in <code>question</code></span></div>
+      <div class="flow-step"><div class="flow-num">3</div><span>API retrieves matching supplier data from knowledge base</span></div>
+      <div class="flow-step"><div class="flow-num">4</div><span>LLM generates ranked matches with met/unmet analysis</span></div>
+      <h3 style="margin-top:1rem;">Generic Template</h3>
+      <div class="code-block"><pre>Find suppliers matching these sourcing requirements:
+  Product: [product description]
+  Material: [material requirements]
+  Finish/Process: [surface treatment or process]
+  MOQ: [quantity constraint]
+  Budget: [price range per unit]
+  Certifications: [required certifications]
+
+Output as: {
+  "supplier_matches": [{
+    "rank": "number",
+    "supplier_name": "string",
+    "match_score": "percentage",
+    "requirements_met": ["string"],
+    "requirements_unconfirmed": ["string"],
+    "requirements_not_met": ["string"],
+    "estimated_unit_price": "string",
+    "estimated_moq": "string",
+    "notes": "string"
+  }]
+}</pre></div>
+      <div class="callout callout-tip">
+        <strong>Pro tip:</strong> Use <span class="ic">RAG_COMPLETION</span> for initial matching, then <span class="ic">GRAPH_COMPLETION_CONTEXT_EXTENSION</span> on top candidates for deeper verification.
+      </div>
+    </div>
+
+    <!-- 10. CODE -->
+    <h2 id="code" class="section-anchor">10. Integration Code</h2>
+    <div class="grid-2">
+      <div class="card">
+        <h3 style="margin-top:0;">Node.js / TypeScript</h3>
+        <div class="code-block"><pre>async function querySupplierIntelligence(
+  question,
+  queryType = 'RAG_COMPLETION'
+) {
+  const res = await fetch(
+    'https://labs.sourcy.ai/api/supplier-intelligence/ask',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        question,
+        query_type: queryType,
+        node_type: 'supplier_intelligence'
+      })
+    }
+  );
+  if (!res.ok) throw new Error(`${res.status}`);
+  return res.json();
+}
+
+// Usage
+const result = await querySupplierIntelligence(
+  'Find umbrella suppliers with logo printing. ' +
+  'Output as JSON: {"suppliers": [{"name": "str"}]}'
+);</pre></div>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0;">Python</h3>
+        <div class="code-block"><pre>import requests
+
+def query_supplier_intelligence(
+    question,
+    query_type="RAG_COMPLETION"
+):
+    resp = requests.post(
+        "https://labs.sourcy.ai/api/"
+        "supplier-intelligence/ask",
+        json={
+            "question": question,
+            "query_type": query_type,
+            "node_type": "supplier_intelligence"
+        }
+    )
+    resp.raise_for_status()
+    return resp.json()
+
+# Usage
+result = query_supplier_intelligence(
+    'Find zinc alloy perfume cap suppliers '
+    'under MOQ 1000. Output as: '
+    '{"suppliers": [{"name": "str"}]}'
+)</pre></div>
+      </div>
+    </div>
+
+    <!-- 11. STRATEGY -->
+    <h2 id="strategy" class="section-anchor">11. Query Strategy Guide</h2>
+    <div class="card">
+      <table class="tbl">
+        <thead><tr><th>Use Case</th><th>Recommended</th><th>Rationale</th></tr></thead>
+        <tbody>
+          <tr><td>Quick supplier lookup</td><td><span class="ic">RAG_COMPLETION</span></td><td>Fast, sufficient for simple queries</td></tr>
+          <tr><td>Requirements matching</td><td><span class="ic">RAG_COMPLETION</span></td><td>Good balance of speed and detail</td></tr>
+          <tr><td>Deep supplier comparison</td><td><span class="ic">GRAPH_COMPLETION_CONTEXT_EXTENSION</span></td><td>Multi-hop traversal</td></tr>
+          <tr><td>Capability verification</td><td><span class="ic">RAG_COMPLETION</span></td><td>Direct factual retrieval</td></tr>
+          <tr><td>Market overview</td><td><span class="ic">GRAPH_COMPLETION_CONTEXT_EXTENSION</span></td><td>Comprehensive context</td></tr>
+          <tr><td>Chatbot responses</td><td><span class="ic">RAG_COMPLETION</span></td><td>Latency-sensitive</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="footer">Generated by Claude Code &mdash; 2026-03-03 &mdash; Sourcy Supplier Intelligence API</div>
+  </div>
+
+  <script>
+    const API_URL = 'https://labs.sourcy.ai/api/supplier-intelligence/ask';
+
+    // ==================== API ENGINE ====================
+    async function callAPI(question, queryType, nodeType) {
+      const body = { question };
+      if (queryType) body.query_type = queryType;
+      if (nodeType) body.node_type = nodeType;
+      const start = performance.now();
+      try {
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const elapsed = Math.round(performance.now() - start);
+        const text = await res.text();
+        let parsed = null;
+        try { parsed = JSON.parse(text); } catch(e) {}
+        return {
+          status: res.status, statusText: res.statusText,
+          time: elapsed, size: new Blob([text]).size,
+          body: parsed !== null ? JSON.stringify(parsed, null, 2) : text,
+          isJson: parsed !== null
+        };
+      } catch (err) {
+        return {
+          status: 0, statusText: 'Network Error',
+          time: Math.round(performance.now() - start), size: 0,
+          body: `Error: ${err.message}\n\nIf you see a CORS error, serve this file via HTTP:\n  npx serve docs/\n  python3 -m http.server 8000 -d docs/\n\nOr copy the curl command and run in terminal.`,
+          isJson: false
+        };
+      }
+    }
+
+    function sClass(c) { return c === 0 ? 'serr' : c < 300 ? 's2xx' : c < 500 ? 's4xx' : 's5xx'; }
+    function fmtBytes(b) { return b < 1024 ? b + ' B' : (b/1024).toFixed(1) + ' KB'; }
+
+    function syntaxHL(json) {
+      return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, m => {
+        let c = 'j-num';
+        if (/^"/.test(m)) c = /:$/.test(m) ? 'j-key' : 'j-str';
+        else if (/true|false/.test(m)) c = 'j-bool';
+        else if (/null/.test(m)) c = 'j-null';
+        return `<span class="${c}">${m}</span>`;
+      });
+    }
+
+    function mkCurl(q, qt, nt) {
+      const b = { question: q };
+      if (qt) b.query_type = qt;
+      if (nt) b.node_type = nt;
+      return `curl --location '${API_URL}' \\\n--header 'Content-Type: application/json' \\\n--data '${JSON.stringify(b, null, 4)}'`;
+    }
+
+    function showResult(prefix, result) {
+      const r = document.getElementById(prefix + '-resp');
+      r.classList.add('visible');
+      const s = document.getElementById(prefix + '-status');
+      s.textContent = result.status === 0 ? 'ERR' : result.status + ' ' + result.statusText;
+      s.className = 'resp-status ' + sClass(result.status);
+      document.getElementById(prefix + '-meta').textContent = result.time + 'ms \u00B7 ' + fmtBytes(result.size);
+      const body = document.getElementById(prefix + '-body');
+      body.innerHTML = result.isJson ? syntaxHL(result.body) : escHtml(result.body);
+    }
+
+    // ==================== PLAYGROUND ====================
+    async function execPlayground() {
+      const btn = document.getElementById('pg-btn');
+      const q = document.getElementById('pg-q').value.trim();
+      if (!q) return;
+      btn.classList.add('loading'); btn.disabled = true;
+      const r = await callAPI(q, document.getElementById('pg-qt').value, document.getElementById('pg-nt').value);
+      showResult('pg', r);
+      btn.classList.remove('loading'); btn.disabled = false;
+    }
+
+    function copyCurl(prefix) {
+      const q = document.getElementById(prefix + '-q').value.trim();
+      const qt = document.getElementById(prefix + '-qt').value;
+      const nt = prefix === 'pg' ? document.getElementById(prefix + '-nt').value : 'supplier_intelligence';
+      navigator.clipboard.writeText(mkCurl(q, qt, nt));
+      event.target.textContent = 'Copied!';
+      setTimeout(() => event.target.textContent = 'Copy as curl', 1500);
+    }
+
+    function clearResp(prefix) { document.getElementById(prefix + '-resp').classList.remove('visible'); }
+
+    // ==================== USE CASE CARDS ====================
+    const useCases = {
+      sc1: [
+        {
+          title: 'Supplier ID & Name Query',
+          desc: 'Ask for specific data fields like supplier IDs and names. Verified with Postman \u2014 200 OK, 3.42s.',
+          question: 'which suppliers can source trash can? I need supplier id and supplier name',
+          qt: 'RAG_COMPLETION', tags: ['fast','rec'],
+          sample: '{\n  "answer": [\n    "Supplier ID: 252498, Supplier Name: Taizhou Leshi Home Products Co., Ltd."\n  ]\n}',
+          sampleMeta: '200 OK \u00B7 3.42s \u00B7 242 B \u00B7 Postman Verified'
+        },
+        {
+          title: 'Basic Supplier Lookup',
+          desc: 'Simple question about available suppliers for a product category.',
+          question: 'What suppliers are available for customized umbrellas?',
+          qt: 'RAG_COMPLETION', tags: ['fast','rec']
+        },
+        {
+          title: 'Perfume Bottle Cap Suppliers',
+          desc: 'Explore supplier availability for a known data-rich product category.',
+          question: 'What suppliers can provide customized perfume bottle caps? What customization options do they support?',
+          qt: 'RAG_COMPLETION', tags: ['fast']
+        },
+        {
+          title: 'Comprehensive Deep-Dive',
+          desc: 'Use GRAPH_COMPLETION_CONTEXT_EXTENSION for thorough multi-hop answers. Slower but most comprehensive.',
+          question: 'Give me a comprehensive overview of all umbrella suppliers, their customization capabilities, pricing tiers, MOQ ranges, and lead times. Include any quality certifications mentioned.',
+          qt: 'GRAPH_COMPLETION_CONTEXT_EXTENSION', tags: ['slow','rec']
+        }
+      ],
+      sc2: [
+        {
+          title: 'Customization Options (Structured)',
+          desc: 'Get customization options as structured JSON with pros, cons, and trade-offs. Verified with Postman \u2014 200 OK, 1m 23s, returned 4 real options with pricing.',
+          question: "What are available customization options for umbrella? Output your response using this structure: {'customization_options': [{'option': 'string', 'pros': ['string'], 'cons': ['string'], 'price_impact': 'string', 'moq_impact': 'string', 'lead_time_impact': 'string'}]} Focus on being actionable and transparent about trade-offs.",
+          qt: 'GRAPH_COMPLETION_CONTEXT_EXTENSION', tags: ['slow','rec'],
+          sample: '// answer[0] parsed from JSON string:\n{\n  "customization_options": [\n    {\n      "option": "Logo Silk Screen Printing",\n      "pros": ["Lower unit cost compared to digital printing", "No color shifts during production"],\n      "cons": ["Limited to stock fabric colors", "Difficult to achieve exact Pantone matches"],\n      "price_impact": "Baseline price (13.5 - 16.2 RMB)",\n      "moq_impact": "None explicitly mentioned.",\n      "lead_time_impact": "Standard lead time (7 days)"\n    },\n    {\n      "option": "Logo Digital Printing",\n      "pros": ["Allows exact Pantone color matching (e.g., Reflex Blue C)"],\n      "cons": ["Higher unit price", "Potential for slight color shifts"],\n      "price_impact": "+2.3 CNY for 21-inch; +1.6 CNY for 23-inch",\n      "moq_impact": "None explicitly mentioned.",\n      "lead_time_impact": "Standard lead time (7 days)"\n    },\n    {\n      "option": "Fabric Black Glue Coating (UV/Opacity)",\n      "pros": ["Enhanced sun protection", "Increased opacity"],\n      "cons": ["Additional cost per unit"],\n      "price_impact": "+0.5 CNY per unit",\n      "moq_impact": "None explicitly mentioned.",\n      "lead_time_impact": "Assumed standard lead time."\n    },\n    {\n      "option": "Structural Component Selection (Rod & Handle)",\n      "pros": ["4-fold rod more durable than 3-fold", "Xiaomi-style handle premium aesthetic"],\n      "cons": ["Higher weight (~1-3kg difference per carton of 50)"],\n      "price_impact": "+2.7 CNY for upgrade to 23-inch (Xiaomi handle)",\n      "moq_impact": "None explicitly mentioned.",\n      "lead_time_impact": "Assumed standard lead time."\n    }\n  ]\n}',
+          sampleMeta: '200 OK \u00B7 1m 23.34s \u00B7 1.89 KB \u00B7 Postman Verified'
+        },
+        {
+          title: 'Capability Qualification (Structured)',
+          desc: 'Qualify suppliers against specific material and finish requirements with structured output.',
+          question: 'Which suppliers can do custom perfume bottle caps with zinc alloy material and electroplating finish? Output as JSON: {"qualified_suppliers": [{"supplier": "string", "material_capability": "string", "finish_options": ["string"], "moq": "string", "price_range": "string"}]}',
+          qt: 'RAG_COMPLETION', tags: ['fast']
+        },
+        {
+          title: 'Supplier Matching from Requirements',
+          desc: 'Core use case: submit requirements, get ranked matches with gap analysis.',
+          question: 'Find suppliers matching these sourcing requirements: Product: Custom branded perfume bottle caps, Material: Zinc alloy or zamak, Finish: Electroplating (gold/silver/rose gold), MOQ: Under 1000 pieces, Budget: $0.50-$2.00 per unit, Certifications: RoHS compliant preferred. Output as: {"supplier_matches": [{"rank": "number", "supplier_name": "string", "match_score": "percentage", "requirements_met": ["string"], "requirements_unconfirmed": ["string"], "requirements_not_met": ["string"], "estimated_unit_price": "string", "estimated_moq": "string", "notes": "string"}]}',
+          qt: 'RAG_COMPLETION', tags: ['fast','rec']
+        },
+        {
+          title: 'Competitive Comparison (Structured)',
+          desc: 'Compare suppliers side-by-side with structured strengths/weaknesses analysis.',
+          question: 'Compare all known umbrella suppliers side by side. Output as JSON: {"comparison": [{"supplier": "string", "strengths": ["string"], "weaknesses": ["string"], "best_for": "string", "price_tier": "budget/mid/premium", "moq_range": "string"}]}',
+          qt: 'RAG_COMPLETION', tags: ['fast']
+        }
+      ],
+      sc3: [
+        {
+          title: 'Car Tire Customization (No Data)',
+          desc: 'Ask about car tires \u2014 a product the knowledge base has no data on. Verified with Postman \u2014 200 OK, 1m 8s, graceful fallback.',
+          question: "What are available customization options for car tire? Output your response using this structure: {'customization_options': [{'option': 'string', 'pros': ['string'], 'cons': ['string'], 'price_impact': 'string', 'moq_impact': 'string', 'lead_time_impact': 'string'}]} Focus on being actionable and transparent about trade-offs.",
+          qt: 'GRAPH_COMPLETION_CONTEXT_EXTENSION', tags: ['slow'],
+          sample: '{\n  "answer": [\n    "No information regarding customization options for car tires is available in the provided context."\n  ]\n}',
+          sampleMeta: '200 OK \u00B7 1m 8.10s \u00B7 268 B \u00B7 Postman Verified'
+        },
+        {
+          title: 'Niche Product (No Data)',
+          desc: 'Ask about an exotic product unlikely to be in the knowledge base.',
+          question: 'What suppliers can provide custom 3D-printed titanium bicycle frames with carbon fiber inserts?',
+          qt: 'RAG_COMPLETION', tags: ['fast']
+        },
+        {
+          title: 'Obscure Material Request',
+          desc: 'Request an exotic material/process combination.',
+          question: 'Find suppliers for graphene-coated ceramic heat sinks for quantum computing modules. I need supplier names, MOQ, and lead times.',
+          qt: 'RAG_COMPLETION', tags: ['fast']
+        }
+      ]
+    };
+
+    const tagMap = {
+      fast: '<span class="tag tag-fast">Fast</span>',
+      slow: '<span class="tag tag-slow">Slow</span>',
+      rec: '<span class="tag tag-rec">Recommended</span>',
+      alt: '<span class="tag tag-alt">Alternative</span>'
+    };
+
+    const qtOpts = [
+      { v: 'RAG_COMPLETION', l: 'RAG_COMPLETION' },
+      { v: 'GRAPH_COMPLETION_CONTEXT_EXTENSION', l: 'GRAPH_COMPLETION_CONTEXT_EXTENSION' },
+      { v: 'GRAPH_COMPLETION', l: 'GRAPH_COMPLETION' },
+      { v: 'GRAPH_COMPLETION_COT', l: 'GRAPH_COMPLETION_COT' }
+    ];
+
+    function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+    function renderCards(containerId, cards) {
+      const el = document.getElementById(containerId);
+      cards.forEach((c, i) => {
+        const id = containerId + '-' + i;
+        const selHTML = qtOpts.map(o => `<option value="${o.v}" ${o.v === c.qt ? 'selected' : ''}>${o.l}</option>`).join('');
+        const sampleHTML = c.sample ? `<div class="sample-resp" style="margin:0.5rem 16px 0; ${c.sampleMeta ? 'background:var(--green-bg); border-color:var(--green);' : ''}"><div class="sample-resp-label" style="${c.sampleMeta ? 'color:var(--green);' : ''}">Sample Response ${c.sampleMeta ? '(' + c.sampleMeta + ')' : '(Verified)'}</div><pre>${escHtml(c.sample)}</pre></div>` : '';
+
+        const div = document.createElement('div');
+        div.className = 'api-card';
+        div.id = id;
+        div.innerHTML = `
+          <div class="api-card-head" onclick="document.getElementById('${id}').classList.toggle('open')">
+            <span class="method-badge">POST</span>
+            <span class="title">${c.title}</span>
+            <div class="tags">${c.tags.map(t => tagMap[t]||'').join(' ')}</div>
+            <span class="chev">&#9660;</span>
+          </div>
+          <div class="api-card-body">
+            <div class="api-card-desc">${c.desc}</div>
+            ${sampleHTML}
+            <div class="api-params">
+              <div class="api-params-title">Parameters</div>
+              <div class="p-row">
+                <div class="p-label">question<span class="p-type">string</span><span class="p-req">required</span></div>
+                <div class="p-input"><textarea id="${id}-q" rows="4">${escHtml(c.question)}</textarea></div>
+              </div>
+              <div class="p-row">
+                <div class="p-label">query_type<span class="p-type">string</span></div>
+                <div class="p-input"><select id="${id}-qt">${selHTML}</select></div>
+              </div>
+            </div>
+            <div class="api-actions">
+              <button class="btn-exec" id="${id}-btn" onclick="execCard('${id}')">
+                <span class="spinner"></span><span class="btn-text">Execute</span>
+              </button>
+              <button class="btn-curl" onclick="copyCurlCard('${id}', this)">Copy as curl</button>
+              <button class="btn-clear" onclick="clearResp('${id}')">Clear</button>
+            </div>
+            <div class="api-response" id="${id}-resp">
+              <div class="resp-header">
+                <span class="resp-status" id="${id}-status"></span>
+                <span class="resp-meta" id="${id}-meta"></span>
+              </div>
+              <div class="resp-body"><pre id="${id}-body"></pre></div>
+            </div>
+          </div>
+        `;
+        el.appendChild(div);
+      });
+    }
+
+    async function execCard(id) {
+      const btn = document.getElementById(id + '-btn');
+      const q = document.getElementById(id + '-q').value.trim();
+      if (!q) return;
+      btn.classList.add('loading'); btn.disabled = true;
+      const r = await callAPI(q, document.getElementById(id + '-qt').value, 'supplier_intelligence');
+      showResult(id, r);
+      btn.classList.remove('loading'); btn.disabled = false;
+    }
+
+    function copyCurlCard(id, btnEl) {
+      const q = document.getElementById(id + '-q').value.trim();
+      const qt = document.getElementById(id + '-qt').value;
+      navigator.clipboard.writeText(mkCurl(q, qt, 'supplier_intelligence'));
+      btnEl.textContent = 'Copied!';
+      setTimeout(() => btnEl.textContent = 'Copy as curl', 1500);
+    }
+
+    // ==================== INIT ====================
+    renderCards('sc1-container', useCases.sc1);
+    renderCards('sc2-container', useCases.sc2);
+    renderCards('sc3-container', useCases.sc3);
+  </script>
+</body>
+</html>
